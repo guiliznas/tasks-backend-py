@@ -2,6 +2,7 @@ from .otimizador import Otimizador
 from .utils import format_to_number, sorter, random_value
 
 import pandas as pd
+import json
 
 class Tester:
   def __init__(self):
@@ -72,8 +73,8 @@ class Tester:
     df = df_old.copy()
     data = {
         name: {
-            'success': "{0:.2f}%".format(df['success'].sum() / len(df) * 100),
-            # 'success': df['success'].sum() / len(df) * 100,
+            # 'success': "{0:.2f}%".format(df['success'].sum() / len(df) * 100),
+            'success': df['success'].sum() / len(df) * 100,
             # 'free_time': "{0:.0f}h".format(df['free_time'].sum()),
             'free_time': df['free_time'].sum()
         }
@@ -93,22 +94,22 @@ class Tester:
           'name': 'default',
           'value': df.copy(deep=True),
         },
-        {
-            'name': 'dumb',
-            'value': df.copy(deep=True).sort_values(['Urgência', 'Importância'], ascending=[False, False])
-        },
-        {
-            'name': 'importancia',
-            'value': df_imp,
-        },
-        {
-            'name': 'urgencia',
-            'value': df_urg,
-        },
-        {
-            'name': 'simple',
-            'value': df_simple,
-        },
+        # {
+        #     'name': 'dumb',
+        #     'value': df.copy(deep=True).sort_values(['Urgência', 'Importância'], ascending=[False, False])
+        # },
+        # {
+        #     'name': 'importancia',
+        #     'value': df_imp,
+        # },
+        # {
+        #     'name': 'urgencia',
+        #     'value': df_urg,
+        # },
+        # {
+        #     'name': 'simple',
+        #     'value': df_simple,
+        # },
         {
             'name': 'complex',
             'value': df_complex,
@@ -125,48 +126,62 @@ class Tester:
     return df_result
 
   def run(self):
-    sheets = ['teste base', 'trabalho', 'pessoal', 'semana1', 'semana2']
+    sheets = [
+      'teste base',
+      'trabalho',
+      'pessoal',
+      'semana1',
+      'semana2'
+    ]
     for sheet in sheets:
       df = self._read_mock(sheet_name=sheet)
 
       result = self.calc_results(df)
-      result = result.sort_values('free_time', ascending=False)
+      result = result.sort_values(['success', 'free_time'], ascending=[False, False])
       result['free_time'] = result['free_time'].map(lambda x: "{0:.0f}h".format(x))
-      print("\n\n" + sheet)
-      print(result.sort_values('free_time', ascending=False))
+      result['success'] = result['success'].map(lambda x: "{0:.1f}%".format(x))
+      print("\n" + sheet)
+      print(result)
     return True
 
   def run_random(self):
     df = self._random_tasks()
+    with open('data.json', 'w+') as file:
+      file.write(df.to_json(orient='records'))
     result = self.calc_results(df)
-    print(result.sort_values('free_time', ascending=False))
+    result['free_time'] = result['free_time'].map(lambda x: "{0:.0f}h".format(x))
+    result['success'] = result['success'].map(lambda x: "{0:.1f}%".format(x))
+    print(result.sort_values(['success', 'free_time'], ascending=False))
 
   def run_batch(self, size=100):
     import sys
-    def start_progress(title):
-      global progress_x
-      sys.stdout.write(title + ": [" + "-"*40 + "]" + chr(8)*41)
-      sys.stdout.flush()
-      progress_x = 0
+    # def start_progress(title):
+    #   global progress_x
+    #   sys.stdout.write(title + ": [" + "-"*40 + "]" + chr(8)*41)
+    #   sys.stdout.flush()
+    #   progress_x = 0
 
-    def progress(x):
-      global progress_x
-      x = int(x * 40 // 100)
-      sys.stdout.write("#" * (x - progress_x))
-      sys.stdout.flush()
-      progress_x = x
+    # def progress(x):
+    #   global progress_x
+    #   x = int(x * 40 // 100)
+    #   sys.stdout.write("#" * (x - progress_x))
+    #   sys.stdout.flush()
+    #   progress_x = x
 
-    def end_progress():
-      sys.stdout.write("#" * (40 - progress_x) + "]\n")
-      sys.stdout.flush()
+    # def end_progress():
+    #   sys.stdout.write("#" * (40 - progress_x) + "]\n")
+    #   sys.stdout.flush()
     
-    start_progress('Simulando')
+    # start_progress('Simulando')
     free_time = dict()
     success = dict()
     both = dict()
+    dfs = []
     for i in range(size):
-      progress(i)
-      result = self.calc_results(self._random_tasks())
+      # progress(i)
+      df = self._random_tasks()
+      dfs.append(df.to_dict(orient='records'))
+      result = self.calc_results(df)
       max_free_time = result['free_time'].idxmax()
       max_success = result['success'].idxmax()
       if max_free_time in free_time:
@@ -183,7 +198,10 @@ class Tester:
         else:
           both[max_free_time] = 1
 
-    end_progress()
+    with open('datas.json', 'w+') as file:
+      file.write(json.dumps(dfs))
+
+    # end_progress()
     free_time = {k: v for k, v in sorted(free_time.items(), key=lambda item: item[1], reverse=True)}
     print('free_time', free_time)
     success = {k: v for k, v in sorted(success.items(), key=lambda item: item[1], reverse=True)}

@@ -1,0 +1,1 @@
+COLUMNS = ['Titulo', 'Importância', 'Urgência', 'Carga', 'Prazo Entrega']
