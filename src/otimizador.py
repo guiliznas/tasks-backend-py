@@ -34,24 +34,24 @@ class Otimizador:
       if (row['carga_prazo'] <= 1):
         # tasks.loc[i, 'peso'] = row['peso'] *10 + row['carga_prazo']*100 # + row['Carga']
         tasks.loc[i, 'peso'] = row['peso'] + row['carga_prazo']*100 # + row['Carga']
+    return tasks
 
-    def second_old(self):
-      df = df_old.copy()
-      tasks = df.loc[:,['Titulo', 'Importância', 'Urgência', 'Carga', 'Prazo Entrega']].copy()
-      
-      # tarefas com carga_prazo > 1 não serão entregues antes do prazo
-      tasks['carga_prazo'] = tasks['Carga'] / tasks['Prazo Entrega']
-      tasks['Urgência'] = (tasks['Carga'] / tasks['Prazo Entrega']) * 10
-      
-      # tasks['peso'] = (1.5*tasks['Urgência']+tasks['Importância'])* tasks['carga_prazo']
-      # se dividir vai dizer qnts pontos de peso tem em cada unidade de prazo?
-      # tasks['peso'] = (2 * tasks['Urgência'] + tasks['Importância']) / tasks['carga_prazo']
-      # Se a carga_prazo for maior q 1 não é melhor deixar para depois?
-      tasks['peso'] = (2 * tasks['Urgência'] + tasks['Importância']) / tasks['carga_prazo']
-      # tasks['peso'] = tasks['peso'].apply(lambda x: int(x) * 10)
-      # tasks['peso'] = tasks.apply(lambda x: x['peso'] if x['carga_prazo'] > 1 else x['peso'] + x['carga_prazo'])
-      for i, row in tasks.iterrows():
-        if (row['carga_prazo'] <= 1):
-          tasks.loc[i, 'peso'] = row['peso'] + row['Carga'] # + row['carga_prazo']
-
+  def second_old(self, df_old):
+    df = df_old.copy()
+    tasks = df.loc[:,['Titulo', 'Importância', 'Urgência', 'Carga', 'Prazo Entrega']].copy()
+    
+    # tarefas com carga_prazo > 1 não serão entregues antes do prazo
+    tasks['carga_prazo'] = tasks['Carga'] / tasks['Prazo Entrega']
+    tasks['Urgência'] = (tasks['Carga'] / tasks['Prazo Entrega']) * 10
+    
+    # tasks['peso'] = (1.5*tasks['Urgência']+tasks['Importância'])* tasks['carga_prazo']
+    # se dividir vai dizer qnts pontos de peso tem em cada unidade de prazo?
+    # tasks['peso'] = (2 * tasks['Urgência'] + tasks['Importância']) / tasks['carga_prazo']
+    # Se a carga_prazo for maior q 1 não é melhor deixar para depois?
+    tasks['peso'] = (2 * tasks['Urgência'] + tasks['Importância']) / tasks['carga_prazo']
+    # tasks['peso'] = tasks['peso'].apply(lambda x: int(x) * 10)
+    # tasks['peso'] = tasks.apply(lambda x: x['peso'] if x['carga_prazo'] > 1 else x['peso'] + x['carga_prazo'])
+    for i, row in tasks.iterrows():
+      if (row['carga_prazo'] <= 1):
+        tasks.loc[i, 'peso'] = row['peso'] + row['Carga'] # + row['carga_prazo']
     return tasks
