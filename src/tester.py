@@ -85,35 +85,31 @@ class Tester:
     return dt.T
 
   def calc_results(self, df):
-    df_imp = sorter(self.otimizador.dumb_mode(df.copy(deep=True), 'Importância'))
-    df_urg = sorter(self.otimizador.dumb_mode(df.copy(deep=True), 'Urgência'))
-    df_simple = sorter(self.otimizador.simple(df.copy(deep=True)))
-    df_complex = sorter(self.otimizador.second(df.copy(deep=True)))
+    df_dumb = sorter(self.otimizador.run(df.copy(deep=True), 'dumb'))
+    df_simple = sorter(self.otimizador.run(df.copy(deep=True), 'partial'))
+    df_complex = sorter(self.otimizador.run(df.copy(deep=True), 'full'))
+    df_complex_2 = sorter(self.otimizador.run(df.copy(deep=True), 'alternative'))
     dfs = [
         {
           'name': 'default',
           'value': df.copy(deep=True),
         },
-        # {
-        #     'name': 'dumb',
-        #     'value': df.copy(deep=True).sort_values(['Urgência', 'Importância'], ascending=[False, False])
-        # },
-        # {
-        #     'name': 'importancia',
-        #     'value': df_imp,
-        # },
-        # {
-        #     'name': 'urgencia',
-        #     'value': df_urg,
-        # },
-        # {
-        #     'name': 'simple',
-        #     'value': df_simple,
-        # },
+        {
+            'name': 'dumb',
+            'value': df_dumb
+        },
+        {
+            'name': 'simple',
+            'value': df_simple,
+        },
         {
             'name': 'complex',
             'value': df_complex,
         },
+        {
+          'name': 'complex2',
+          'value': df_complex_2
+        }
     ]
 
     df_result = pd.DataFrame(columns=['free_time', 'success'])
@@ -142,6 +138,7 @@ class Tester:
       result['success'] = result['success'].map(lambda x: "{0:.1f}%".format(x))
       print("\n" + sheet)
       print(result)
+      print('\n')
     return True
 
   def run_random(self):
@@ -149,9 +146,10 @@ class Tester:
     with open('data.json', 'w+') as file:
       file.write(df.to_json(orient='records'))
     result = self.calc_results(df)
+    result = result.sort_values(['success', 'free_time'], ascending=[False, False])
     result['free_time'] = result['free_time'].map(lambda x: "{0:.0f}h".format(x))
     result['success'] = result['success'].map(lambda x: "{0:.1f}%".format(x))
-    print(result.sort_values(['success', 'free_time'], ascending=False))
+    print(result)
 
   def run_batch(self, size=100):
     import sys

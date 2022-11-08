@@ -3,8 +3,8 @@ from src.tester import Tester
 tester = Tester()
 
 # tester.run()
-tester.run_random()
-# tester.run_batch()
+# tester.run_random()
+# tester.run_batch(size=10)
 
 from flask import Flask
 
