@@ -4,7 +4,7 @@ tester = Tester()
 
 # tester.run()
 # tester.run_random()
-# tester.run_batch(size=10)
+# tester.run_batch(size=100)
 
 from flask import Flask
 

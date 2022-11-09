@@ -17,7 +17,7 @@ class Tester:
     lista = list()
     for i in range(size):
       carga = random_value(min=1, max=5)
-      prazo = random_value(min=1, max=7)*8
+      prazo = random_value(min=5, max=10)*8
       # df = df.append({
       #     'Titulo': i,
       #     'Importância': random_value(),
@@ -87,8 +87,8 @@ class Tester:
   def calc_results(self, df):
     df_dumb = sorter(self.otimizador.run(df.copy(deep=True), 'dumb'))
     df_simple = sorter(self.otimizador.run(df.copy(deep=True), 'partial'))
-    df_complex = sorter(self.otimizador.run(df.copy(deep=True), 'full'))
-    df_complex_2 = sorter(self.otimizador.run(df.copy(deep=True), 'alternative'))
+    df_full = sorter(self.otimizador.run(df.copy(deep=True), 'full'))
+    df_alternative = sorter(self.otimizador.run(df.copy(deep=True), 'alternative'))
     dfs = [
         {
           'name': 'default',
@@ -103,12 +103,12 @@ class Tester:
             'value': df_simple,
         },
         {
-            'name': 'complex',
-            'value': df_complex,
+            'name': 'full',
+            'value': df_full,
         },
         {
-          'name': 'complex2',
-          'value': df_complex_2
+          'name': 'alternative',
+          'value': df_alternative
         }
     ]
 
