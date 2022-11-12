@@ -4,15 +4,15 @@ tester = Tester()
 
 # tester.run()
 # tester.run_random()
-# tester.run_batch(size=100)
+tester.run_batch(size=100)
 
-from flask import Flask
+# from flask import Flask
 
-app = Flask(__name__)
+# app = Flask(__name__)
 
-@app.route("/")
-def hello_world():
-    return "<p>Hello, World!</p>"
+# @app.route("/")
+# def hello_world():
+#     return "<p>Hello, World!</p>"
 
-if __name__ == "__main__":
-  app.run(debug=True)
+# if __name__ == "__main__":
+#   app.run(debug=True)
