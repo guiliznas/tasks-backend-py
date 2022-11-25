@@ -22,7 +22,7 @@ class Otimizador:
 
     return df
 
-  def _dumb(self, df_old, arg="Importância"):
+  def _dumb(self, df_old, arg="Urgência"):
     tasks = df_old.copy()
     tasks['peso'] = tasks.loc[:, arg]
     return tasks
@@ -41,9 +41,9 @@ class Otimizador:
     # tarefas com carga_prazo > 1 não serão entregues antes do prazo
     tasks['carga_prazo'] = tasks['Carga'] / tasks['Prazo Entrega'] * 15
     
-    # se dividir vai dizer qnts pontos de peso tem em cada unidade de prazo?
+    # se dividir, vai mostrar quantos pontos de peso tem em cada unidade de prazo
     tasks['peso'] = (2 * tasks['Urgência'] + tasks['Importância']) / tasks['carga_prazo']
-    # Se a carga_prazo for maior q 1 não é melhor deixar para depois?
+    # Se a carga_prazo for maior que 1, a tarefa está teoricamente atrasada
     for i, row in tasks.iterrows():
       if (row['carga_prazo'] <= 1):
         tasks.loc[i, 'peso'] = row['peso'] + row['carga_prazo'] * 100
@@ -54,6 +54,7 @@ class Otimizador:
     tasks = df.loc[:,COLUMNS].copy()
     
     tasks['carga_prazo'] = (tasks['Carga'] / tasks['Prazo Entrega']) * 15
+    
     # Considerar mais urgente aquilo que possui menos tempo para ser concluído
     tasks['Urgência'] = tasks['carga_prazo']
     

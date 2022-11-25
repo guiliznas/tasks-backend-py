@@ -1,0 +1,35 @@
+
+**** Free Time ****
+{
+ "alternative": 98,
+ "default": 3
+}
+{
+ "default": 0.0,
+ "dumb": -14.68227934954371,
+ "simple": 0.7883766145683456,
+ "full": 0.36659703170216096,
+ "alternative": 9.508450908219636
+}
+
+**** Success ****
+{
+ "alternative": 75,
+ "full": 24,
+ "default": 14,
+ "simple": 7
+}
+{
+ "default": 0.0,
+ "dumb": -0.25371913888794656,
+ "simple": -0.03141336298237607,
+ "full": 0.02463306091277462,
+ "alternative": 0.1430268015750605
+}
+
+**** Both ****
+{
+ "alternative": 75,
+ "default": 3
+}
+    
