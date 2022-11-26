@@ -29,9 +29,12 @@ parser_post.add_argument('carga',
 
 
 class TasksListResource(Resource):
-    def get(self):
-        tarefas = TarefaModel.query.all()
-        return list(x.json() for x in tarefas)
+    def get(self, ):
+        modo = request.args.get('modo')
+        # tarefas = TarefaModel.query.all()
+        # return list(x.json() for x in tarefas)
+        api = APITask()
+        return api.listar(modo=modo)
 
     def post(self):
         # data = request.get_json()

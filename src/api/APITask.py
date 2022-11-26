@@ -82,3 +82,13 @@ class APITask:
             return {'message': 'Tarefa removida'}, 200
 
         return {'message': "Tarefa não encontrada"}, 404
+
+    def listar(self, modo='alternativo'):
+        if modo not in ['sem_modelo', 'basico', 'avancado', 'alternativo']:
+            modo = 'alternativo'
+        tarefas = TarefaModel.query.all()
+        df = pd.DataFrame(list(x.json() for x in tarefas))
+        # TODO: Considerar modo do user
+        if len(df) == 0:
+            return []
+        return df.sort_values('peso_{}'.format(modo), ascending=False).to_dict(orient='records')
