@@ -1,6 +1,7 @@
 from flask import request
 from flask_restful import Resource, reqparse
 
+from src.api.APITask import APITask
 from src.db.models import TarefaModel, db
 from src.utils import flask_requests_parser
 
@@ -35,9 +36,12 @@ class TasksListResource(Resource):
     def post(self):
         # data = request.get_json()
         data = parser_post.parse_args()
-        tarefa = TarefaModel(data['titulo'], data['descricao'], data['importancia'], data['urgencia'], data['prazo'],
-                             data['carga'])
-        db.session.add(tarefa)
-        db.session.flush()
-        db.session.commit()
-        return tarefa.json(), 201
+
+        api = APITask()
+        tarefa, status_code = api.salvar(data=data)
+        # tarefa = TarefaModel(data['titulo'], data['descricao'], data['importancia'], data['urgencia'], data['prazo'],
+        #                      data['carga'])
+        # db.session.add(tarefa)
+        # db.session.flush()
+        # db.session.commit()
+        return tarefa, status_code

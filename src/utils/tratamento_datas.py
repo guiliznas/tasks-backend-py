@@ -23,7 +23,7 @@ def parse_date_by_datetime_format_2(x, dayfirst=True):
         return None
 
 
-def parte_to_datetime(x):
+def parse_to_datetime(x):
     x = pd.to_datetime(x, dayfirst=True)
     return x.date()
 
@@ -38,4 +38,6 @@ def convert_datetime_to_str(date: datetime.datetime) -> str:
     if isinstance(date, datetime.datetime):
         # return date.strftime("%d/%m/%Y %H:%M:%S")
         return date.strftime("%d/%m/%Y")
+    # if isinstance(date, datetime.date):
+    #     return date.strftime("%d/%m/%Y")
     return date

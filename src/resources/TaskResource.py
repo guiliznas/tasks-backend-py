@@ -1,6 +1,7 @@
 from flask import request
 from flask_restful import Resource, reqparse
 
+from src.api.APITask import APITask
 from src.db.models import TarefaModel, db
 from src.utils import flask_requests_parser
 
@@ -36,31 +37,38 @@ class TaskResource(Resource):
         # data = request.get_json()
         data = parser_put.parse_args()
 
-        tarefa = TarefaModel.query.filter_by(id=id).first()
+        api = APITask()
+        tarefa, status_code = api.salvar(data=data, id=id)
 
-        if tarefa:
-            tarefa.titulo = data['titulo']
-            tarefa.descricao = data['descricao']
-            tarefa.importancia = data['importancia']
-            tarefa.urgencia = data['urgencia']
-            tarefa.prazo = data['prazo']
-            tarefa.carga = data['carga']
-        else:
-            tarefa = TarefaModel(**data)
+        # tarefa = TarefaModel.query.filter_by(id=id).first()
+        #
+        # if tarefa:
+        #     tarefa.titulo = data['titulo']
+        #     tarefa.descricao = data['descricao']
+        #     tarefa.importancia = data['importancia']
+        #     tarefa.urgencia = data['urgencia']
+        #     tarefa.prazo = data['prazo']
+        #     tarefa.carga = data['carga']
+        # else:
+        #     tarefa = TarefaModel(**data)
+        #
+        # db.session.add(tarefa)
+        # db.session.flush()
+        # db.session.commit()
 
-        db.session.add(tarefa)
-        db.session.flush()
-        db.session.commit()
-
-        return tarefa.json()
+        return tarefa, status_code
 
     def delete(self, id):
-        tarefa = TarefaModel.query.filter_by(id=id).first()
+        # tarefa = TarefaModel.query.filter_by(id=id).first()
+        #
+        # if tarefa:
+        #     db.session.delete(tarefa)
+        #     db.session.commit()
+        #
+        #     return {'message': 'Tarefa removida'}
+        #
+        # return {'message': 'Tarefa não encontrada'}, 404
 
-        if tarefa:
-            db.session.delete(tarefa)
-            db.session.commit()
-
-            return {'message': 'Tarefa removida'}
-
-        return {'message': 'Tarefa não encontrada'}, 404
+        api = APITask()
+        result, status = api.remover(id=id)
+        return result, status
