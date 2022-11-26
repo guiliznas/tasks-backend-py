@@ -1,10 +1,9 @@
-from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy import TIMESTAMP
 import uuid
 
 from src.utils import tratamento_datas
 
-db = SQLAlchemy()
+from src.db.database import db
 
 
 class TarefaModel(db.Model):

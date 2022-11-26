@@ -12,14 +12,22 @@ from src.resources.TasksListResource import TasksListResource
 from flask import Flask, request
 from flask_restful import Api
 from flask_cors import CORS
-from src.db.models import db
+from src.db.database import db
 
-app = Flask(__name__)
-CORS(app)
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///tarefas.db'
-app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
-api = Api(app)
-db.init_app(app)
+
+def create_app(db_connection='sqlite:///tarefas.db'):
+    app = Flask(__name__)
+    CORS(app)
+    app.config['SQLALCHEMY_DATABASE_URI'] = db_connection
+    app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+    db.init_app(app)
+    api = Api(app)
+    api.add_resource(TasksListResource, '/tarefas')
+    api.add_resource(TaskResource, '/tarefa/<string:id>')
+    return app
+
+
+app = create_app()
 
 
 @app.before_first_request
@@ -31,9 +39,6 @@ def create_table():
 def hello_world():
     return "<p>Hello, World!</p>"
 
-
-api.add_resource(TasksListResource, '/tarefas')
-api.add_resource(TaskResource, '/tarefa/<string:id>')
 
 app.debug = True
 if __name__ == '__main__':
