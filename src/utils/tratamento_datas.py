@@ -3,7 +3,7 @@ import datetime
 import pandas as pd
 
 
-def parse_date_by_datetime_format_2(x, dayfirst=False):
+def parse_date_by_datetime_format_2(x, dayfirst=True):
     """
         if dayfirst:
             _format = '%d-%m-%Y'
@@ -14,10 +14,8 @@ def parse_date_by_datetime_format_2(x, dayfirst=False):
     :return:
     """
     try:
-        if dayfirst:
-            _format = '%d-%m-%Y'
-        else:
-            _format = '%Y-%m-%d'
+        # _format = '%d-%m-%Y %H:%M:%S'
+        _format = '%d-%m-%Y'
         x = datetime.datetime.strptime(x, _format)
         return x.date()
     except Exception as e:
@@ -38,5 +36,6 @@ def convert_datetime_to_date(date: datetime.datetime) -> datetime.date:
 
 def convert_datetime_to_str(date: datetime.datetime) -> str:
     if isinstance(date, datetime.datetime):
-        return date.strftime("%d/%m/%Y %H:%M:%S")
+        # return date.strftime("%d/%m/%Y %H:%M:%S")
+        return date.strftime("%d/%m/%Y")
     return date

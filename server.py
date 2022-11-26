@@ -11,9 +11,11 @@ from src.resources.TasksListResource import TasksListResource
 
 from flask import Flask, request
 from flask_restful import Api
+from flask_cors import CORS
 from src.db.models import db
 
 app = Flask(__name__)
+CORS(app)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///tarefas.db'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 api = Api(app)

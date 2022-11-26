@@ -34,7 +34,6 @@ class TarefaModel(db.Model):
         self.carga = carga
 
     def json(self):
-        print(type(self.prazo))
         return {
             "id": self.id,
             "titulo": self.titulo,

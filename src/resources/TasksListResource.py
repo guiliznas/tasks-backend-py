@@ -2,6 +2,7 @@ from flask import request
 from flask_restful import Resource, reqparse
 
 from src.db.models import TarefaModel, db
+from src.utils import flask_requests_parser
 
 parser_post = reqparse.RequestParser()
 parser_post.add_argument('titulo',
@@ -19,6 +20,7 @@ parser_post.add_argument('urgencia',
                          type=float
                          )
 parser_post.add_argument('prazo',
+                         type=flask_requests_parser.parser_date_dayfirst_v2,
                          )
 parser_post.add_argument('carga',
                          type=float,
