@@ -13,6 +13,7 @@ from flask import Flask, request
 from flask_restful import Api
 from flask_cors import CORS
 from src.db.database import db
+from flask_migrate import Migrate
 
 
 def create_app(db_connection='sqlite:///tarefas.db'):
@@ -21,6 +22,7 @@ def create_app(db_connection='sqlite:///tarefas.db'):
     app.config['SQLALCHEMY_DATABASE_URI'] = db_connection
     app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
     db.init_app(app)
+    migrate = Migrate(app, db)
     api = Api(app)
     api.add_resource(TasksListResource, '/tarefas')
     api.add_resource(TaskResource, '/tarefa/<string:id>')
