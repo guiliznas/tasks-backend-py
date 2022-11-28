@@ -80,7 +80,7 @@ class APITask:
 
         return {'message': "Tarefa não encontrada"}, 404
 
-    def listar(self, modo='alternativo'):
+    def listar(self, modo='alternativo', agenda=False):
         if modo not in ['sem_modelo', 'basico', 'avancado', 'alternativo']:
             modo = 'alternativo'
         tarefas = TarefaModel.query.all()
@@ -88,4 +88,12 @@ class APITask:
         # TODO: Considerar modo do user
         if len(df) == 0:
             return []
-        return df.sort_values('peso_{}'.format(modo), ascending=False).to_dict(orient='records')
+        result = df.sort_values('peso_{}'.format(modo), ascending=False)
+        if agenda:
+            carga_total = 0  # Contar quantas horas "passaram"
+            for (i, task) in result.iterrows():
+                carga_total += task['carga']
+                result.loc[i, 'dia_agenda'] = int(carga_total / 8)
+            return result.to_dict(orient='records')
+        else:
+            return result.to_dict(orient='records')
