@@ -1,5 +1,5 @@
-from core.otimizador import Otimizador
-from .utils import format_to_number, sorter, random_value
+from src.core.otimizador import Otimizador
+from src.utils_funcs import format_to_number, sorter, random_value
 
 import pandas as pd
 import json

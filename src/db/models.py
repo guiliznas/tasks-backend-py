@@ -43,12 +43,12 @@ class TarefaModel(db.Model):
 
     def __init__(self,
                  titulo,
-                 descricao,
                  importancia,
                  urgencia,
                  prazo,
                  carga,
                  id=None,
+                 descricao=None,
                  peso_sem_modelo=None,
                  peso_basico=None,
                  peso_avancado=None,
@@ -73,7 +73,6 @@ class TarefaModel(db.Model):
         prazo = tratamento_datas.convert_datetime_to_str(self.prazo) if self.prazo else None
         if type(prazo) is d.date:
             prazo = prazo.strftime("%d/%m/%Y")
-        print("JSON", type(prazo))
         return {
             "id": self.id,
             "titulo": self.titulo,

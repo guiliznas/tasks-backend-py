@@ -30,11 +30,12 @@ parser_post.add_argument('carga',
 
 class TasksListResource(Resource):
     def get(self, ):
+        agenda = request.args.get('agenda')
         modo = request.args.get('modo')
         # tarefas = TarefaModel.query.all()
         # return list(x.json() for x in tarefas)
         api = APITask()
-        return api.listar(modo=modo)
+        return api.listar(modo=modo, agenda=agenda)
 
     def post(self):
         # data = request.get_json()
@@ -48,3 +49,33 @@ class TasksListResource(Resource):
         # db.session.flush()
         # db.session.commit()
         return tarefa, status_code
+
+    def put(self):
+        from src.tester import Tester
+        from src.db.models import TarefaModel
+        sheet_name = request.args.get('sheet', 'semana2')
+        t = Tester()
+        df = t._read_mock(sheet_name=sheet_name)
+        df = df.rename(columns={
+            'Titulo': 'titulo',
+            'Importância': 'importancia',
+            'Urgência': 'urgencia',
+            'Data entrega': 'prazo',
+            'Carga': 'carga'
+        })
+        df = df[[
+            'titulo',
+            'importancia',
+            'urgencia',
+            'prazo',
+            'carga'
+        ]]
+        df['descricao'] = ''
+        api = APITask()
+        for task in df.to_dict(orient='records'):
+            tarefa = (TarefaModel(**task))
+            print(tarefa)
+            api.salvar(data=task)
+
+    def delete(self):
+        return TarefaModel.query().delete()

@@ -56,11 +56,8 @@ class APITask:
 
         tarefa = self._calcular_pesos(tarefa=tarefa)
 
-        print("Tipo", type(tarefa.prazo))
         if isinstance(tarefa.prazo, str):
             tarefa.prazo = tratamento_datas.parse_to_datetime(tarefa.prazo)
-
-        print("Tarefa", tarefa.json())
 
         if id:
             self.session.merge(tarefa)
