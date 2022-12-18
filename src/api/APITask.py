@@ -31,6 +31,24 @@ class APITask:
 
         return TarefaModel(**dic)
 
+    def concluir(self, concluida=False, id=None):
+
+        tarefa = TarefaModel.query.filter_by(id=id).first()
+        if not tarefa:
+            return {
+                       'message': 'Tarefa não encontrada'
+                   }, 404
+
+        status_code = 200
+
+        tarefa.concluida = concluida
+
+        self.session.merge(tarefa)
+        self.session.flush()
+        self.session.commit()
+
+        return tarefa.json(), status_code
+
     def salvar(self, data: dict, id: str = None):
         # TODO: se a tarefa tiver id e nao encontrar, retornar status 404
         tarefa = None
@@ -80,7 +98,7 @@ class APITask:
 
         return {'message': "Tarefa não encontrada"}, 404
 
-    def listar(self, modo='alternativo', agenda=False):
+    def listar(self, modo='alternativo', agenda=False, ativas=False):
         if modo not in ['sem_modelo', 'basico', 'avancado', 'alternativo']:
             modo = 'alternativo'
         tarefas = TarefaModel.query.all()
@@ -88,6 +106,8 @@ class APITask:
         # TODO: Considerar modo do user
         if len(df) == 0:
             return []
+        if ativas:
+            df = df[df['concluida'] != True]
         result = df.sort_values('peso_{}'.format(modo), ascending=False)
         if agenda:
             carga_total = 0  # Contar quantas horas "passaram"

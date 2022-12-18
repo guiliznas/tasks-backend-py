@@ -18,6 +18,7 @@ class TarefaModel(db.Model):
     urgencia = db.Column(db.Float())
     prazo = db.Column(db.DateTime)
     carga = db.Column(db.Float())
+    concluida = db.Column(db.Boolean())
 
     peso_sem_modelo = db.Column(db.Float())
     peso_basico = db.Column(db.Float())
@@ -55,6 +56,7 @@ class TarefaModel(db.Model):
                  peso_alternativo=None,
                  prazo_entrega=None,  ## nao usar
                  carga_prazo=None,
+                 concluida=False,
                  ):
         self.id = id
         self.titulo = titulo
@@ -67,6 +69,7 @@ class TarefaModel(db.Model):
         self.peso_basico = peso_basico
         self.peso_avancado = peso_avancado
         self.peso_alternativo = peso_alternativo
+        self.concluida = concluida
 
     def json(self):
         import datetime as d
@@ -86,6 +89,7 @@ class TarefaModel(db.Model):
             "peso_basico": self.peso_basico,
             "peso_avancado": self.peso_avancado,
             "peso_alternativo": self.peso_alternativo,
+            "concluida": self.concluida,
         }
 
     def __repr__(self):

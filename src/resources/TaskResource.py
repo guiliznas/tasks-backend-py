@@ -25,6 +25,9 @@ parser_put.add_argument('carga',
                         type=float,
                         )
 
+parser_patch = reqparse.RequestParser()
+parser_patch.add_argument('concluida', type=bool, )
+
 
 class TaskResource(Resource):
     def get(self, id):
@@ -32,6 +35,15 @@ class TaskResource(Resource):
         if tarefa:
             return tarefa.json()
         return {'message': 'Tarefa não encontrada'}, 404
+
+    def patch(self, id):
+        data = parser_patch.parse_args()
+
+        api = APITask()
+
+        result, status_code = api.concluir(concluida=data['concluida'], id=id)
+
+        return result, status_code
 
     def put(self, id):
         # data = request.get_json()

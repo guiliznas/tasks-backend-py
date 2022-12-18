@@ -32,10 +32,11 @@ class TasksListResource(Resource):
     def get(self, ):
         agenda = request.args.get('agenda')
         modo = request.args.get('modo')
+        ativas = request.args.get('ativas', False)
         # tarefas = TarefaModel.query.all()
         # return list(x.json() for x in tarefas)
         api = APITask()
-        return api.listar(modo=modo, agenda=agenda)
+        return api.listar(modo=modo, agenda=agenda, ativas=ativas)
 
     def post(self):
         # data = request.get_json()
