@@ -21,8 +21,15 @@ class APITask:
         dic = tarefa.json()
         # dic['prazo_entrega'] = tarefa.prazo_entrega()
 
-        if not dic['prazo_entrega']:
+        if dic['prazo_entrega'] is None:
+            tarefa.peso_sem_modelo = 0
+            tarefa.peso_basico = 0
+            tarefa.peso_avancado = 0
+            tarefa.peso_alternativo = 0
             return tarefa
+
+        if dic['prazo_entrega'] == 0:
+            dic['prazo_entrega'] = 1
 
         dic['peso_sem_modelo'] = self.otimizador.sem_modelo(tarefa=dic)
         dic['peso_basico'] = self.otimizador.basico(tarefa=dic)
@@ -106,7 +113,7 @@ class APITask:
         # TODO: Considerar modo do user
         if len(df) == 0:
             return []
-        if ativas:
+        if ativas is True:
             df = df[df['concluida'] != True]
         result = df.sort_values('peso_{}'.format(modo), ascending=False)
         if agenda:

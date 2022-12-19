@@ -41,7 +41,7 @@ class TaskResource(Resource):
 
         api = APITask()
 
-        result, status_code = api.concluir(concluida=data['concluida'], id=id)
+        result, status_code = api.concluir(concluida=data.get('concluida'), id=id)
 
         return result, status_code
 
